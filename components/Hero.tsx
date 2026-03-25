@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { personalInfo } from "@/lib/data";
+import { getAssetPath } from "@/lib/utils";
 import { Github, Linkedin, Mail, Download, ChevronDown } from "lucide-react";
 
 export default function Hero() {
@@ -132,7 +133,7 @@ export default function Hero() {
               />
               <div className="absolute inset-1 rounded-full overflow-hidden bg-slate-900 flex items-center justify-center">
                 <img
-                  src={personalInfo.profileImage}
+                  src={getAssetPath(personalInfo.profileImage)}
                   alt={personalInfo.name}
                   className="w-full h-full object-contain"
                   style={{ objectPosition: 'center' }}
@@ -204,7 +205,7 @@ export default function Hero() {
                 Get In Touch
               </motion.button>
               <motion.a
-                href={personalInfo.resumePdf}
+                href={getAssetPath(personalInfo.resumePdf)}
                 download
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
