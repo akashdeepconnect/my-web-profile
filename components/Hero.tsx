@@ -130,14 +130,12 @@ export default function Hero() {
                 }}
                 style={{ padding: "4px" }}
               />
-              <div className="absolute inset-1 rounded-full overflow-hidden bg-slate-900">
-                <Image
+              <div className="absolute inset-1 rounded-full overflow-hidden bg-slate-900 flex items-center justify-center">
+                <img
                   src={personalInfo.profileImage}
                   alt={personalInfo.name}
-                  fill
-                  className="object-contain"
+                  className="w-full h-full object-contain"
                   style={{ objectPosition: 'center' }}
-                  priority
                 />
               </div>
             </div>
