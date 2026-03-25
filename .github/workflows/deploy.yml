@@ -49,67 +49,40 @@ jobs:
           echo "Starting Next.js build..."
           echo "NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}"
           npm run build
-          echo ""
-          echo "Build completed. Checking for out directory..."
-          if [ ! -d "out" ]; then
-            echo "out directory not created by build, checking .next/export-marker.json"
-            if [ -f ".next/export-marker.json" ]; then
-              echo "Export marker exists but out directory missing - this is a Next.js 15 issue"
-              echo "The static files should be in .next/server/app or similar"
-              echo "Let's check .next structure:"
-              find .next -type d -maxdepth 2
-            fi
-          fi
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
 
-      - name: Verify build output
+      - name: Create out directory and export
         run: |
-          echo "=== Checking build output ==="
-          echo "Current directory contents:"
-          ls -la
-          echo ""
-          if [ -d "out" ]; then
-            echo "✓ out directory exists"
-            echo "Contents of out directory:"
-            ls -la out/
-            echo ""
-            echo "First level subdirectories:"
-            find out -maxdepth 1 -type d
-          else
-            echo "✗ out directory not found!"
-            echo ""
-            echo "Checking for .next directory:"
-            if [ -d ".next" ]; then
-              echo "✓ .next directory exists"
-              ls -la .next/
-            else
-              echo "✗ .next directory not found either"
-            fi
-            echo ""
-            echo "All directories in current path:"
-            find . -maxdepth 2 -type d
-            exit 1
-          fi
-
-      - name: Create out directory if needed
-        run: |
+          echo "=== Checking for out directory ==="
           if [ ! -d "out" ]; then
-            echo "Creating out directory and copying static files..."
-            mkdir -p out
-            # Copy static files from .next
+            echo "out directory not found, creating manually..."
+            mkdir -p out/_next
+            
+            echo "Copying static files..."
             if [ -d ".next/static" ]; then
-              cp -r .next/static out/_next
+              cp -r .next/static/* out/_next/
+              echo "✓ Copied .next/static"
             fi
+            
+            echo "Copying server-rendered pages..."
             if [ -d ".next/server/app" ]; then
-              # Copy HTML files from server/app
-              find .next/server/app -name "*.html" -exec cp {} out/ \;
+              find .next/server/app -name "*.html" -exec sh -c 'cp "$1" "out/$(basename "$1")"' _ {} \;
+              echo "✓ Copied HTML files"
             fi
-            # Copy public files
+            
+            echo "Copying public files..."
             if [ -d "public" ]; then
               cp -r public/* out/
+              echo "✓ Copied public files"
             fi
-            echo "Manual export completed"
+            
+            echo ""
+            echo "=== Manual export completed ==="
+            echo "Contents of out directory:"
+            ls -la out/
+          else
+            echo "✓ out directory already exists"
             ls -la out/
           fi
 
