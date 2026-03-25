@@ -49,6 +49,17 @@ jobs:
           echo "Starting Next.js build..."
           echo "NEXT_PUBLIC_BASE_PATH=/${{ github.event.repository.name }}"
           npm run build
+          echo ""
+          echo "Build completed. Checking for out directory..."
+          if [ ! -d "out" ]; then
+            echo "out directory not created by build, checking .next/export-marker.json"
+            if [ -f ".next/export-marker.json" ]; then
+              echo "Export marker exists but out directory missing - this is a Next.js 15 issue"
+              echo "The static files should be in .next/server/app or similar"
+              echo "Let's check .next structure:"
+              find .next -type d -maxdepth 2
+            fi
+          fi
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
 
@@ -79,6 +90,27 @@ jobs:
             echo "All directories in current path:"
             find . -maxdepth 2 -type d
             exit 1
+          fi
+
+      - name: Create out directory if needed
+        run: |
+          if [ ! -d "out" ]; then
+            echo "Creating out directory and copying static files..."
+            mkdir -p out
+            # Copy static files from .next
+            if [ -d ".next/static" ]; then
+              cp -r .next/static out/_next
+            fi
+            if [ -d ".next/server/app" ]; then
+              # Copy HTML files from server/app
+              find .next/server/app -name "*.html" -exec cp {} out/ \;
+            fi
+            # Copy public files
+            if [ -d "public" ]; then
+              cp -r public/* out/
+            fi
+            echo "Manual export completed"
+            ls -la out/
           fi
 
       - name: Upload artifact
