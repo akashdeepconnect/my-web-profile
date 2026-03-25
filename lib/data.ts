@@ -15,7 +15,7 @@ export const personalInfo = {
 export const about = {
   summary: "Senior engineer with over seven years of experience building cloud-native applications and AI systems. I have worked across the full stack — from designing AWS infrastructure and DevOps pipelines to building Generative AI solutions using LangChain, RAG architectures, and agentic workflows with LangGraph. More recently my focus has shifted heavily towards production LLM systems, prompt engineering, vector database integrations, and the Model Context Protocol. I enjoy working on technically hard problems and care a lot about writing clean, maintainable code.",
   metrics: [
-    { value: "7+", label: "Years Experience" },
+    { value: "8+", label: "Years Experience" },
     { value: "50+", label: "Projects" },
     { value: "4", label: "Companies" },
     { value: "5", label: "Certifications" },
