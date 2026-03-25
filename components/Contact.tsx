@@ -3,6 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { personalInfo } from "@/lib/data";
+import { getAssetPath } from "@/lib/utils";
 import { Mail, Phone, MapPin, Linkedin, Github, Download, Copy, Check } from "lucide-react";
 
 export default function Contact() {
@@ -126,7 +127,7 @@ export default function Contact() {
               className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-all group"
             >
               <a
-                href={personalInfo.resumePdf}
+                href={getAssetPath(personalInfo.resumePdf)}
                 download
                 className="flex items-center gap-3"
               >
